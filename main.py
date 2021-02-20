@@ -1,33 +1,35 @@
 import argparse # don't remove me
-import dd
-
 from os import path
+from dd import dd
+from dd import check_sparse
+import sys
 
 if __name__ == "__main__": # don't remove this line
+    inFile = None
+    outFile = None
+    bs = '512'
+    count = ''
+    seek = '0'
+    skip = '0'
+    conv = ''
+    args = sys.argv
+    for arg in args:
+        if arg.startswith("if="):
+            inFile = arg[3:]
+        if arg.startswith("of="):
+            outFile = arg[3:]
+        if arg.startswith('seek='):
+            seek = arg[5:]
+        if arg.startswith('skip='):
+            skip = arg[5:]
+        if arg.startswith("bs="):
+            bs = arg[3:]
+        if arg.startswith("count="):
+            count = arg[6:]
+        if arg.startswith('conv='):
+            conv = arg[5:]
 
-    p = argparse.ArgumentParser() # don't remove this line either
-
-    ### EDIT THESE AS NEEDED ###
-    p.add_argument("file", type=str, help="name/path of the input file")
-    p.add_argument("-x", action="store_true", help="extract something True/False")
-    p.add_argument("-n", action="store", help="specify some number")
-    ############################
-
-    args = p.parse_args()
-
-    ### YOUR LOGIC BELOW ###
-
-    if path.exists(args.file):
-        if not path.isfile(args.file):
-            raise Exception("Given path is not a file!")
+    if path.exists(inFile):
+        dd(inFile,outFile,bs,count, seek, skip, conv)
     else:
-        raise Exception("Given path does not exist!")
-
-    
-
-    if args.x:
-        print("Extract option specified.")
-        if args.n:
-            print("n specified; n = %s" % args.n)
-        else:
-            print("n not specified.")
+        print("File {0} not in directory".format(inFile))
